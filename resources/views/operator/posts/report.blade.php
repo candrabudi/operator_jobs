@@ -10,10 +10,10 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a class="text-muted text-decoration-none" href="../index.html">Dashboard</a>
+                                    <a class="text-muted text-decoration-none" href="/">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item">
-                                    <a class="text-muted text-decoration-none" href="../index.html">Request Post</a>
+                                    <a class="text-muted text-decoration-none" href="/">Request Post</a>
                                 </li>
                                 <li class="breadcrumb-item" aria-current="page">Report Post</li>
                             </ol>
