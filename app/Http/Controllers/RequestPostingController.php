@@ -98,7 +98,7 @@ class RequestPostingController extends Controller
                     $senderNumber = '6285229931237';
                     $recipientNumber = $operator->phone_number;
                     $mediaType = 'image';
-                    $imageCaption = 'from api';
+                    $imageCaption = '';
                     $imageUrl = asset('/storage/'.$filePath);
                     
                     $response = Http::get('https://whatsapp.xn--v3cud6b6c.systems/send-media', [
@@ -117,7 +117,7 @@ class RequestPostingController extends Controller
                     $senderNumber = '6285229931237';
                     $recipientNumber = $operator->phone_number;
                     $mediaType = 'video';
-                    $imageCaption = 'from api';
+                    $imageCaption = '';
                     $videoUrl = asset('/storage/'.$filePath);
 
                     $response = Http::get('https://whatsapp.xn--v3cud6b6c.systems/send-media', [
