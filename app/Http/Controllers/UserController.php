@@ -28,7 +28,7 @@ class UserController extends Controller
             'phone_number' => 'required|string|max:15',
             'role' => 'required|in:superadmin,admin,operator_posting,operator_boosting,operator_both',
             'status' => 'required|boolean',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
         ]);
 
         try {
@@ -74,7 +74,7 @@ class UserController extends Controller
             'phone_number' => 'required|string|max:255',
             'role' => 'required|string|in:superadmin,admin,operator_posting,operator_boosting,operator_both',
             'status' => 'required|boolean',
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'nullable|string|min:8',
         ]);
 
         $user = User::find($id);
