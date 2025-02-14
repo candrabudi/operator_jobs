@@ -103,7 +103,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" required>
+                            <input type="password" name="password" class="form-control" id="password" required>
                         </div>
                         <div class="mb-3">
                             <label for="role" class="form-label">Role</label>
@@ -153,7 +153,7 @@
                         <div class="mb-3">
                             <label for="edit_password" class="form-label">Password (Leave blank to keep current
                                 password)</label>
-                            <input type="password" class="form-control" id="edit_password">
+                            <input type="password" class="form-control" name="edit_password" id="edit_password">
                         </div>
                         <div class="mb-3">
                             <label for="edit_role" class="form-label">Role</label>
@@ -256,13 +256,15 @@
             const phoneNumber = document.getElementById('edit_phone_number').value;
             const role = document.getElementById('edit_role').value;
             const status = document.getElementById('edit_status').value;
+            const edit_password = document.getElementById('edit_password').value;
 
             axios.put(`/system/users/${userId}/update`, {
                     full_name: fullName,
                     username: username,
                     phone_number: phoneNumber,
                     role: role,
-                    status: status
+                    status: status,
+                    password: edit_password,
                 })
                 .then(response => {
                     Swal.fire({
@@ -322,6 +324,7 @@
             const fullName = document.getElementById('full_name').value;
             const username = document.getElementById('username').value;
             const phoneNumber = document.getElementById('phone_number').value;
+            const password = document.getElementById('password').value;
             const role = document.getElementById('role').value;
 
             axios.post('/system/users/store', {
@@ -329,6 +332,7 @@
                     username: username,
                     phone_number: phoneNumber,
                     role: role,
+                    password: password,
                     status: 1
                 })
                 .then(response => {
