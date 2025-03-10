@@ -37,11 +37,8 @@
                     </div>
                     <div
                         class="col-md-8 col-xl-9 text-end d-flex justify-content-md-end justify-content-center mt-3 mt-md-0">
-                        <a href="javascript:void(0)" id="btn-add-platform"
-                            class="btn btn-sm btn-info d-flex align-items-center" data-bs-toggle="modal"
-                            data-bs-target="#addPlatformModal">
-                            <i class="ti ti-plus text-white me-1 fs-5"></i> Add Platform
-                        </a>
+                        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPlatformModal">Add
+                            Platform</button>
                     </div>
                 </div>
             </div>
@@ -50,16 +47,20 @@
                     <table class="table search-table align-middle text-nowrap">
                         <thead class="header-item">
                             <tr>
-                                <th>Platform Name</th>
+                                <th>ID</th>
+                                <th>Social Media Name</th>
                                 <th>Description</th>
-                                <th>Limits</th>
-                                <th width="120">Action</th>
+                                <th>Engagement</th>
+                                <th>Created At</th>
+                                <th>Updated At</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="platform-table-body">
+                        <tbody id="topic-table-body">
 
                         </tbody>
                     </table>
+
 
                     <nav id="pagination" aria-label="Page navigation">
                         <ul class="pagination pagination-sm">
@@ -79,53 +80,31 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="platformForm">
+                    <form id="addPlatformForm">
                         @csrf
                         <div class="mb-3">
-                            <label for="name" class="form-label">Platform Name</label>
-                            <input type="text" name="social_media_name" class="form-control" required>
+                            <label for="social_media_name" class="form-label">Social Media Name</label>
+                            <input type="text" class="form-control" id="social_media_name" name="social_media_name"
+                                required>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea name="description" class="form-control"></textarea>
+                            <textarea name="description" class="form-control" id="description" required></textarea>
                         </div>
-
                         <div class="mb-3">
-                            <label class="form-label">Platform Limits</label>
-                            <div id="limit-container">
-                                <div class="limit-row mb-3">
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="platform_type[]" class="form-label">Boost Type</label>
-                                            <select name="platform_type[]" class="form-control">
-                                                <option value="like">Like</option>
-                                                <option value="comment">Comment</option>
-                                                <option value="view">View</option>
-                                                <option value="share">Share</option>
-                                                <option value="subscribe">Subscribe</option>
-                                                <option value="follow">Follow</option>
-                                            </select>
-                                        </div>
-                                        <div class="col">
-                                            <label for="min_value[]" class="form-label">Min Value</label>
-                                            <input type="number" name="min[]" class="form-control" value="1">
-                                        </div>
-                                        <div class="col">
-                                            <label for="max_value[]" class="form-label">Max Value</label>
-                                            <input type="number" name="max[]" class="form-control" value="1000">
-                                        </div>
-                                        <div class="col">
-                                            <label class="form-label">Action</label>
-                                            <button type="button" class="btn btn-danger remove-limit">Remove</button>
-                                        </div>
-                                    </div>
+                            <label for="engagement_types" class="form-label">Engagement Types</label>
+                            @foreach ($engagements as $eggm)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="engagement_type_{{ $eggm->id }}"
+                                        value="{{ $eggm->id }}" />
+                                    <label class="form-check-label"
+                                        for="engagement_type_{{ $eggm->id }}">{{ $eggm->engagement_type }}</label>
                                 </div>
-                            </div>
-                            <button type="button" class="btn btn-primary" id="add-limit">Add Limit</button>
+                            @endforeach
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Add Platform</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add Social Media</button>
                         </div>
                     </form>
                 </div>
@@ -133,371 +112,248 @@
         </div>
     </div>
 
-    <div class="modal fade" id="editPlatformModal" tabindex="-1" aria-labelledby="editPlatformModalLabel"
+    <!-- Edit Social Media Platform Modal -->
+    <div class="modal fade" id="editEngagementModal" tabindex="-1" aria-labelledby="editEngagementModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editPlatformModalLabel">Edit Social Media Platform</h5>
+                    <h5 class="modal-title" id="editEngagementModalLabel">Edit Social Media Platform</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editPlatformForm">
+                    <form id="editEngagementForm">
                         @csrf
-                        <input type="hidden" id="edit_platform_id" name="platform_id">
-
+                        <input type="hidden" id="edit_engagement_id">
                         <div class="mb-3">
-                            <label for="edit_social_media_name" class="form-label">Platform Name</label>
-                            <input type="text" id="edit_social_media_name" name="social_media_name"
-                                class="form-control" required>
+                            <label for="edit_social_media_name" class="form-label">Social Media Name</label>
+                            <input type="text" class="form-control" id="edit_social_media_name"
+                                name="social_media_name" required>
                         </div>
-
                         <div class="mb-3">
                             <label for="edit_description" class="form-label">Description</label>
-                            <textarea id="edit_description" name="description" class="form-control"></textarea>
+                            <textarea name="description" class="form-control" id="edit_description" required></textarea>
                         </div>
-
                         <div class="mb-3">
-                            <label class="form-label">Platform Limits</label>
-                            <div id="limit-container-edit"></div>
-                            <button type="button" class="btn btn-primary" id="add-limit-edit">Add Limit</button>
+                            <label for="edit_engagement_types" class="form-label">Engagement Types</label>
+                            @foreach ($engagements as $eggm)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox"
+                                        id="edit_engagement_type_{{ $eggm->id }}" value="{{ $eggm->id }}" />
+                                    <label class="form-check-label"
+                                        for="edit_engagement_type_{{ $eggm->id }}">{{ $eggm->engagement_type }}</label>
+                                </div>
+                            @endforeach
                         </div>
-
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Update Platform</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update Social Media</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
+@endsection
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const platformTableBody = document.getElementById('platform-table-body');
-        const paginationNav = document.getElementById('pagination').querySelector('ul');
+        function fetchSocialMediaPlatforms() {
+            axios.get('{{ route('system.social_media_platforms.list') }}')
+                .then(response => {
+                    const platforms = response.data;
+                    let html = '';
 
-        function getPageFromUrl(url) {
-            const match = url ? url.match(/page=(\d+)/) : null;
-            return match ? match[1] : 1;
-        }
-
-        function buildPlatformTable(platforms) {
-            let rows = '';
-            platforms.forEach(platform => {
-                const limits = platform.limits.map(limit => `
-                    <div>${limit.platform_type}: ${limit.min} - ${limit.max}</div>
-                `).join('');
-
-                rows += `
-                    <tr class="search-items">
+                    platforms.forEach(platform => {
+                        const createdAt = new Date(platform.created_at).toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                        const updatedAt = new Date(platform.updated_at).toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                        let engagementsHtml = '';
+                        platform.social_media_platform_engagement.forEach(engagement => {
+                            engagementsHtml += `
+                        <tr>
+                            <td>${engagement.engagement_type}</td>
+                            <td>${engagement.min}</td>
+                            <td>${engagement.max}</td>
+                            <td>${new Date(engagement.created_at).toLocaleDateString('id-ID')}</td>
+                            <td>${new Date(engagement.updated_at).toLocaleDateString('id-ID')}</td>
+                        </tr>`;
+                        });
+                        html += `
+                    <tr>
+                        <td>${platform.id}</td>
                         <td>${platform.social_media_name}</td>
-                        <td>${platform.description || 'No description'}</td>
-                        <td>${limits}</td>
+                        <td>${platform.description}</td>
                         <td>
-                            <div class="action-btn">
-                                <a href="javascript:void(0)" class="text-info edit" onclick="editPlatform(${platform.id})">
-                                    <i class="ti ti-pencil fs-5"></i> Edit
-                                </a>
-                                <a href="javascript:void(0)" class="text-dark delete ms-2" onclick="deletePlatform(${platform.id})">
-                                    <i class="ti ti-trash fs-5"></i> Delete
-                                </a>
-                            </div>
+                            <button class="btn btn-sm btn-info" onclick="toggleEngagement(${platform.id})">
+                                Show Engagement
+                            </button>
+                        </td>
+                        <td>${createdAt}</td>
+                        <td>${updatedAt}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" 
+                                data-id="${platform.id}" 
+                                data-name="${platform.social_media_name}" 
+                                data-description="${platform.description}" 
+                                data-engagement='${JSON.stringify(platform.social_media_platform_engagement)}'
+                                onclick="handleEditPlatform(this)">
+                                    Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deletePlatform(${platform.id})">Delete</button>
                         </td>
                     </tr>
-                `;
-            });
-            return rows;
-        }
-
-        function buildPaginationLinks(paginationLinks, currentPage) {
-            let paginationHtml = '';
-            paginationLinks.forEach(link => {
-                paginationHtml += `
-                    <li class="page-item ${link.active ? 'active' : ''}">
-                        <a class="page-link" href="javascript:void(0)" onclick="fetchPlatforms(${getPageFromUrl(link.url) || currentPage})">
-                            ${link.label}
-                        </a>
-                    </li>
-                `;
-            });
-            return paginationHtml;
-        }
-
-        function fetchPlatforms(page = 1) {
-            axios.get(`/system/platforms/list?page=${page}`)
-                .then(response => {
-                    const {
-                        data: platforms,
-                        current_page: currentPage,
-                        links: paginationLinks
-                    } = response.data;
-                    platformTableBody.innerHTML = buildPlatformTable(platforms);
-                    paginationNav.innerHTML = buildPaginationLinks(paginationLinks, currentPage);
-                })
-                .catch(error => {
-                    console.error('Error fetching platforms:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to fetch platform data.',
+                    <tr id="engagement-row-${platform.id}" class="d-none">
+                        <td colspan="7">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Engagement Type</th>
+                                        <th>Min</th>
+                                        <th>Max</th>
+                                        <th>Created At</th>
+                                        <th>Updated At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${engagementsHtml}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>`;
                     });
-                });
+
+                    document.getElementById('topic-table-body').innerHTML = html;
+                })
+                .catch(error => console.error('Error fetching social media platforms:', error));
         }
 
-        function deletePlatform(userId) {
+        function toggleEngagement(id) {
+            const engagementRow = document.getElementById(`engagement-row-${id}`);
+            if (engagementRow.classList.contains('d-none')) {
+                engagementRow.classList.remove('d-none');
+                engagementRow.previousElementSibling.querySelector('button').textContent = 'Hide Engagement';
+            } else {
+                engagementRow.classList.add('d-none');
+                engagementRow.previousElementSibling.querySelector('button').textContent = 'Show Engagement';
+            }
+        }
+
+        document.getElementById('addPlatformForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const socialMediaName = document.getElementById('social_media_name').value;
+            const description = document.getElementById('description').value;
+
+            const engagementTypes = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(
+                cb => cb.value);
+
+            axios.post('{{ route('system.social_media_platforms.store') }}', {
+                social_media_name: socialMediaName,
+                description: description,
+                engagement_types: engagementTypes
+            }).then(response => {
+                Swal.fire('Success', response.data.message, 'success');
+                document.getElementById('addPlatformForm').reset();
+                fetchSocialMediaPlatforms();
+                $('#addPlatformModal').modal('hide');
+            }).catch(error => {
+                console.error('Error adding engagement:', error);
+                Swal.fire('Error', 'Failed to add engagement', 'error');
+            });
+        });
+
+        function handleEditPlatform(button) {
+            const id = button.getAttribute('data-id');
+            const name = button.getAttribute('data-name');
+            const description = button.getAttribute('data-description');
+            const engagementString = button.getAttribute('data-engagement');
+
+            let engagements = [];
+            try {
+                engagements = JSON.parse(engagementString);
+            } catch (error) {
+                console.error("Error parsing engagements JSON:", error);
+            }
+            editPlatform(id, name, description, engagements);
+        }
+
+        function editPlatform(id, name, description, engagements) {
+            document.getElementById('edit_engagement_id').value = id;
+            document.getElementById('edit_social_media_name').value = name;
+            document.getElementById('edit_description').value = description;
+
+            document.querySelectorAll('#editEngagementForm .form-check-input').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            engagements.forEach(engagement => {
+                const engagementCheckbox = document.querySelector(
+                    `#edit_engagement_type_${engagement.engagement_type_id}`);
+                if (engagementCheckbox) {
+                    engagementCheckbox.checked = true;
+                }
+            });
+
+            const editModal = new bootstrap.Modal(document.getElementById('editEngagementModal'));
+            editModal.show();
+        }
+
+        document.getElementById('editEngagementForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit_engagement_id').value;
+            const socialMediaName = document.getElementById('edit_social_media_name').value;
+            const description = document.getElementById('edit_description').value;
+            const engagementTypes = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(
+                cb => cb.value);
+
+            axios.put(`/system/social-media-platforms/${id}/update`, {
+                social_media_name: socialMediaName,
+                description: description,
+                engagement_types: engagementTypes
+            }).then(response => {
+                Swal.fire('Success', response.data.message, 'success');
+                fetchSocialMediaPlatforms();
+                $('#editEngagementModal').modal('hide');
+            }).catch(error => {
+                console.error('Error updating platform:', error);
+                Swal.fire('Error', 'Failed to update platform', 'error');
+            });
+        });
+
+        function deletePlatform(id) {
             Swal.fire({
                 title: 'Are you sure?',
-                text: 'You will not be able to recover this user!',
+                text: 'You will not be able to recover this platform!',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!'
-            }).then(result => {
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete(`/system/platforms/${userId}/destroy`)
+                    axios.delete(`/system/social_media_platforms/${id}/destroy`)
                         .then(response => {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Deleted!',
-                                text: 'Platform has been deleted.'
-                            });
-                            fetchPlatforms();
+                            Swal.fire('Deleted!', response.data.message, 'success');
+                            fetchSocialMediaPlatforms();
                         })
                         .catch(error => {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Failed to delete user.'
-                            });
-                            console.error('Error deleting user:', error);
+                            console.error('Error deleting platform:', error);
+                            Swal.fire('Error', 'Failed to delete platform', 'error');
                         });
                 }
             });
         }
 
-        document.getElementById('platformForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-
-            axios.post("/system/platforms/store", formData)
-                .then(function(response) {
-                    if (response.data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Create!',
-                            text: 'Platform has been created.'
-                        });
-                        $('#addPlatformModal').modal('hide');
-                        document.getElementById('platformForm').reset();
-                        document.getElementById('limit-container').innerHTML = '';
-                        fetchPlatforms();
-                    }
-                })
-                .catch(function(error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to add platform. Please try again.',
-                    });
-                });
-        });
-
-        const limitContainer = document.getElementById('limit-container-edit');
-        const addLimitButton = document.getElementById('add-limit-edit');
-
-        function createLimitRow(limit = {}) {
-            const limitRow = document.createElement('div');
-            limitRow.classList.add('limit-row', 'mb-3');
-            limitRow.innerHTML = `
-            <div class="row">
-                <div class="col">
-                    <label for="platform_type[]" class="form-label">Boost Type</label>
-                    <select name="platform_type[]" class="form-control">
-                        <option value="like" ${limit.platform_type === 'like' ? 'selected' : ''}>Like</option>
-                        <option value="comment" ${limit.platform_type === 'comment' ? 'selected' : ''}>Comment</option>
-                        <option value="view" ${limit.platform_type === 'view' ? 'selected' : ''}>View</option>
-                        <option value="share" ${limit.platform_type === 'share' ? 'selected' : ''}>Share</option>
-                        <option value="subscribe" ${limit.platform_type === 'subscribe' ? 'selected' : ''}>Subscribe</option>
-                        <option value="follow" ${limit.platform_type === 'follow' ? 'selected' : ''}>Follow</option>
-                    </select>
-                </div>
-                <div class="col">
-                    <label for="min[]" class="form-label">Min Value</label>
-                    <input type="number" name="min[]" class="form-control" value="${limit.min || 1}">
-                </div>
-                <div class="col">
-                    <label for="max[]" class="form-label">Max Value</label>
-                    <input type="number" name="max[]" class="form-control" value="${limit.max || 1000}">
-                </div>
-                <div class="col">
-                    <label class="form-label">Action</label>
-                    <button type="button" class="btn btn-danger remove-limit">Remove</button>
-                </div>
-            </div>
-            `;
-            limitRow.querySelector('.remove-limit').addEventListener('click', function() {
-                limitRow.remove();
-            });
-            return limitRow;
-        }
-
-        addLimitButton.addEventListener('click', function() {
-            const newLimitRow = createLimitRow();
-            limitContainer.appendChild(newLimitRow);
-        });
-
-        function populateLimits(limits) {
-            limitContainer.innerHTML = '';
-            limits.forEach(limit => {
-                const limitRow = createLimitRow(limit);
-                limitContainer.appendChild(limitRow);
-            });
-        }
-
-        document.getElementById('editPlatformForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const platformId = document.getElementById('edit_platform_id').value;
-            const formData = new FormData(this);
-
-            axios.post(`/system/platforms/${platformId}/update`, formData)
-                .then(response => {
-                    if (response.data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Updated!',
-                            text: 'Success update platform',
-                        });
-                        $('#editPlatformModal').modal('hide');
-                        document.getElementById('editPlatformForm').reset();
-                        limitContainer.innerHTML = '';
-                        fetchPlatforms(); // Assuming this refreshes the platform list
-                    }
-                })
-                .catch(error => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to update platform.',
-                    });
-                });
-        });
-
-        window.editPlatform = function(platformId) {
-            axios.get(`/system/platforms/${platformId}/edit`)
-                .then(response => {
-                    const platform = response.data.platform;
-                    document.getElementById('edit_platform_id').value = platform.id;
-                    document.getElementById('edit_social_media_name').value = platform.social_media_name;
-                    document.getElementById('edit_description').value = platform.description;
-                    populateLimits(platform.limits);
-
-                    $('#editPlatformModal').modal('show');
-                })
-                .catch(error => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to fetch platform data.',
-                    });
-                });
-        };
-
-        fetchPlatforms();
-    </script>
-
-
-    <script>
-        document.getElementById('add-limit').addEventListener('click', function() {
-            const limitContainer = document.getElementById('limit-container');
-            const newLimitRow = document.createElement('div');
-            newLimitRow.classList.add('limit-row', 'mb-3');
-
-            newLimitRow.innerHTML = `
-                <div class="row">
-                    <div class="col">
-                        <label for="platform_type[]" class="form-label">Boost Type</label>
-                        <select name="platform_type[]" class="form-control">
-                            <option value="like">Like</option>
-                            <option value="comment">Comment</option>
-                            <option value="view">View</option>
-                            <option value="share">Share</option>
-                            <option value="subscribe">Subscribe</option>
-                            <option value="follow">Follow</option>
-                            <option value="comment">Comment</option>
-                        </select>
-                    </div>
-                    <div class="col">
-                        <label for="min_value[]" class="form-label">Min Value</label>
-                        <input type="number" name="min_value[]" class="form-control" value="1">
-                    </div>
-                    <div class="col">
-                        <label for="max_value[]" class="form-label">Max Value</label>
-                        <input type="number" name="max_value[]" class="form-control" value="1000">
-                    </div>
-                    <div class="col">
-                        <label class="form-label">Action</label>
-                        <button type="button" class="btn btn-danger remove-limit">Remove</button>
-                    </div>
-                </div>
-            `;
-
-            limitContainer.appendChild(newLimitRow);
-            newLimitRow.querySelector('.remove-limit').addEventListener('click', function() {
-                limitContainer.removeChild(newLimitRow);
-            });
-        });
-
-        document.querySelectorAll('.remove-limit').forEach(function(button) {
-            button.addEventListener('click', function() {
-                const limitRow = button.closest('.limit-row');
-                limitRow.parentElement.removeChild(limitRow);
-            });
-        });
-    </script>
-    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const limitContainer = document.getElementById('limit-container-edit');
-            const addLimitButton = document.getElementById('add-limit-edit');
-            addLimitButton.addEventListener('click', function() {
-                const limitRow = document.createElement('div');
-                limitRow.classList.add('limit-row', 'mb-3');
-                limitRow.innerHTML = `
-                <div class="row">
-                    <div class="col">
-                        <label for="platform_type[]" class="form-label">Boost Type</label>
-                        <select name="platform_type[]" class="form-control">                            <option value="view">View</option>
-                            <option value="share">Share</option>
-                            <option value="subscribe">Subscribe</option>
-                            <option value="follow">Follow</option>
-                            <option value="comment">Comment</option>
-                        </select>
-                    </div>
-                    <div class="col">
-                        <label for="min[]" class="form-label">Min Value</label>
-                        <input type="number" name="min[]" class="form-control" value="1">
-                    </div>
-                    <div class="col">
-                        <label for="max[]" class="form-label">Max Value</label>
-                        <input type="number" name="max[]" class="form-control" value="1000">
-                    </div>
-                    <div class="col">
-                        <label class="form-label">Action</label>
-                        <button type="button" class="btn btn-danger remove-limit">Remove</button>
-                    </div>
-                </div>
-            `;
-                limitContainer.appendChild(limitRow);
-                limitRow.querySelector('.remove-limit').addEventListener('click', function() {
-                    limitRow.remove();
-                });
-            });
-            document.querySelectorAll('.remove-limit').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    this.closest('.limit-row').remove();
-                });
-            });
+            fetchSocialMediaPlatforms();
         });
-    </script> --}}
-@endsection
+    </script>
+@endpush

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\BoostReport;
 use App\Models\BoostReportMedia;
+use App\Models\RequestBoost;
 use App\Models\RequestBoosting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,12 +19,10 @@ class OperatorRequestBoostController extends Controller
 
     public function list()
     {
-        $user = Auth::user();
-        $requestPosts = RequestBoosting::where('user_id', $user->id)
-            ->with('socialMediaPlatform', 'socialMediaPlatformLimit')
-            ->paginate(25);
+        $requestBoosts = RequestBoost::with('platform', 'engagement')
+        ->paginate(25);
 
-        return response()->json($requestPosts);
+        return response()->json($requestBoosts);
     }
 
     public function report($a)

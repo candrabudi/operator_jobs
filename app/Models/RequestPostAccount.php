@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RequestPostingMedia extends Model
+class RequestPostAccount extends Model
 {
     use HasFactory;
 }

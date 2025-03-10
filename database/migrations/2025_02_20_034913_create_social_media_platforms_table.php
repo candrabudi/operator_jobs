@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('social_media_platforms', function (Blueprint $table) {
             $table->id();
             $table->string('social_media_name');
-            $table->text('description')->nullable();
+            // $table->text('description')->nullable();
+            $table->text('social_media_icon')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('socia_media_platforms');
+        Schema::dropIfExists('social_media_platforms');
     }
 };

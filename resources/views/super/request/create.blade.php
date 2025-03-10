@@ -47,38 +47,22 @@
                             <div class="col-12">
                                 <div class="card w-100 position-relative overflow-hidden mb-0">
                                     <div class="card-body p-4">
-                                        <h5 class="card-title fw-semibold">Request Posting Details</h5>
-                                        <p class="card-subtitle mb-4">save the request posting details here</p>
                                         <form method="POST" enctype="multipart/form-data"
                                             action="{{ route('system.request.posts.store') }}">
                                             @csrf
+                                            <h5 class="card-title fw-semibold">Request Posting Details</h5>
+                                            <p class="card-subtitle mb-4">save the request posting details here</p>
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="mb-4">
-                                                        <label for="total_account" class="form-label fw-semibold">Total
-                                                            Account</label>
-                                                        <input type="text" class="form-control" id="total_account"
-                                                            name="total_account" placeholder="Total Account">
-                                                    </div>
-
-                                                    <div class="mb-4">
-                                                        <label for="user_id"
-                                                            class="form-label fw-semibold">Operator</label>
-                                                        <select name="user_id" id="user_id" class="form-control">
-                                                            <option value="">Select Operator</option>
-                                                            @foreach ($operators as $opr)
-                                                                <option value="{{ $opr->id }}">{{ $opr->full_name }}
+                                                        <label for="topic_id" class="form-label fw-semibold">Topic</label>
+                                                        <select name="topic_id" id="topic_id" class="form-control">
+                                                            <option value="">Select Topic</option>
+                                                            @foreach ($topics as $tp)
+                                                                <option value="{{ $tp->id }}">{{ $tp->topic_name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-lg-6">
-                                                    <div class="mb-4">
-                                                        <label for="title" class="form-label fw-semibold">Title</label>
-                                                        <input type="text" class="form-control" id="title"
-                                                            name="title" placeholder="Post Title">
                                                     </div>
                                                     <div class="mb-4">
                                                         <label for="social_media_platform_id"
@@ -94,12 +78,21 @@
                                                     </div>
                                                 </div>
 
+                                                <div class="col-lg-6">
+                                                    <div class="mb-4">
+                                                        <label for="title" class="form-label fw-semibold">Title</label>
+                                                        <input type="text" class="form-control" id="title"
+                                                            name="title" placeholder="Post Title">
+                                                    </div>
+                                                </div>
+
                                                 <div class="col-lg-12">
                                                     <div class="mb-4">
                                                         <label for="content" class="form-label fw-semibold">Content</label>
                                                         <textarea class="form-control" id="content" name="content" placeholder="Please input your content" rows="4"
                                                             maxlength="150"></textarea>
-                                                        <small id="charCount" class="text-muted">Max 150 characters</small>
+                                                        <small id="charCount" class="text-muted">Max 150
+                                                            characters</small>
                                                     </div>
                                                 </div>
 
@@ -142,13 +135,12 @@
                                                     <small class="form-text text-muted">Supported types: images, videos,
                                                         documents (max size 10MB each)</small>
                                                 </div>
-
-                                                <div class="col-12">
-                                                    <div class="d-flex align-items-center justify-content-end mt-4 gap-3">
-                                                        <button type="submit" class="btn btn-primary">Save</button>
-                                                        <button type="button"
-                                                            class="btn bg-danger-subtle text-danger">Cancel</button>
-                                                    </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="d-flex align-items-center justify-content-end mt-4 gap-3">
+                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                    <button type="button"
+                                                        class="btn bg-danger-subtle text-danger">Cancel</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -161,19 +153,18 @@
             </div>
         </div>
     </div>
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-
+@endsection
+@push('scripts')
     <script>
         document.getElementById('addMedia').addEventListener('click', function() {
             const mediaContainer = document.getElementById('mediaContainer');
             const newMedia = document.createElement('div');
             newMedia.classList.add('media-item', 'mb-4');
             newMedia.innerHTML = `
-                <label class="form-label fw-semibold">Upload Media</label>
-                <input type="file" class="form-control media-file" name="mediaFiles[]" accept="image/*,video/*,.doc,.docx,.pdf">
-                <button type="button" class="btn btn-danger btn-sm mt-2 remove-media">Delete</button>
-            `;
+            <label class="form-label fw-semibold">Upload Media</label>
+            <input type="file" class="form-control media-file" name="mediaFiles[]" accept="image/*,video/*,.doc,.docx,.pdf">
+            <button type="button" class="btn btn-danger btn-sm mt-2 remove-media">Delete</button>
+        `;
             mediaContainer.appendChild(newMedia);
             newMedia.querySelector('.remove-media').addEventListener('click', function() {
                 newMedia.remove();
@@ -185,4 +176,4 @@
             });
         });
     </script>
-@endsection
+@endpush

@@ -9,9 +9,12 @@ use App\Http\Controllers\OperatorRequestPostController;
 use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\RequestBoostingController;
 use App\Http\Controllers\RequestPostingController;
+use App\Http\Controllers\SocialMediaAccountController;
+use App\Http\Controllers\SocialMediaEngagementController;
+use App\Http\Controllers\SocialMediaPlatformController;
+use App\Http\Controllers\TopicController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,7 +97,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/system/request/operator/posts/{a}/detail', [OperatorRequestPostController::class, 'detail'])->name('system.operator.request.posts.detail');
     Route::get('/system/request/operator/posts/{a}/detail', [OperatorRequestPostController::class, 'detail'])->name('system.operator.request.posts.detail');
     Route::get('/system/request/operator/posts/{a}/report', [OperatorRequestPostController::class, 'report'])->name('system.operator.request.posts.report');
-    Route::post('/system/request/operator/posts/report/store', [OperatorRequestPostController::class, 'storeReport'])->name('system.operator.request.posts.store');
+    Route::post('/system/request/operator/posts/{a}/report/store', [OperatorRequestPostController::class, 'storeReport'])->name('system.operator.request.posts.store');
     Route::put('/system/request/operator/posts/report/update/{id}', [OperatorRequestPostController::class, 'updateReport'])->name('system.operator.request.posts.update');
     
     Route::get('/system/operator/request/boosts', [OperatorRequestBoostController::class, 'index'])->name('system.operator.request.boosts');
@@ -104,4 +107,41 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/system/request/operator/boosts/{a}/report', [OperatorRequestBoostController::class, 'report'])->name('system.operator.request.boosts.report');
     Route::post('/system/request/operator/boosts/report/store', [OperatorRequestBoostController::class, 'storeReport'])->name('system.operator.request.boosts.store');
     Route::put('/system/request/operator/boosts/report/update/{id}', [OperatorRequestBoostController::class, 'updateReport'])->name('system.operator.request.boosts.update');
+
+
+    Route::get('/system/topics', [TopicController::class, 'index'])->name('system.topics.index');
+    Route::get('/system/topics/list', [TopicController::class, 'list'])->name('system.topics.list');
+    Route::post('/system/topics/store', [TopicController::class, 'store'])->name('system.topics.store');
+    Route::put('/system/topics/{a}/update', [TopicController::class, 'update'])->name('system.topics.update');
+    Route::delete('/system/topics/{a}/destroy', [TopicController::class, 'destroy'])->name('system.topics.destroy');
+    
+    
+    Route::get('/system/engagements', [SocialMediaEngagementController::class, 'index'])->name('system.engagements.index');
+    Route::get('/system/engagements/list', [SocialMediaEngagementController::class, 'list'])->name('system.engagements.list');
+    Route::post('/system/engagements/store', [SocialMediaEngagementController::class, 'store'])->name('system.engagements.store');
+    Route::put('/system/engagements/{a}/update', [SocialMediaEngagementController::class, 'update'])->name('system.engagements.update');
+    Route::delete('/system/engagements/{a}/destroy', [SocialMediaEngagementController::class, 'destroy'])->name('system.engagements.destroy');
+
+
+    Route::prefix('system/social-media-platforms')->name('system.social_media_platforms.')->group(function () {
+        Route::get('/', [SocialMediaPlatformController::class, 'index'])->name('index');
+        Route::get('/list', [SocialMediaPlatformController::class, 'list'])->name('list');
+        Route::post('/store', [SocialMediaPlatformController::class, 'store'])->name('store');
+        Route::get('/{a}/edit', [SocialMediaPlatformController::class, 'edit'])->name('edit');
+        Route::put('/{a}/update', [SocialMediaPlatformController::class, 'update'])->name('update');
+        Route::delete('/{a}/destroy', [SocialMediaPlatformController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('system/social-media-accounts')->name('system.social_media_accounts.')->group(function () {
+        Route::get('/', [SocialMediaAccountController::class, 'index'])->name('index');
+        Route::get('/list', [SocialMediaAccountController::class, 'list'])->name('list');
+        Route::post('/store', [SocialMediaAccountController::class, 'store'])->name('store');
+        Route::get('/{a}/edit', [SocialMediaAccountController::class, 'edit'])->name('edit');
+        Route::put('/{a}/update', [SocialMediaAccountController::class, 'update'])->name('update');
+        Route::delete('/{a}/destroy', [SocialMediaAccountController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::get('/get-assigned-accounts/{topicId}', [RequestPostingController::class, 'getAssignedAccounts']);
+    Route::get('/get-engagements/{platformId}', [RequestBoostingController::class, 'getEngagements']);
+
 });

@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('boost_reports', function (Blueprint $table) {
+        Schema::create('social_media_account_topics', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('request_boost_id');
-            $table->string('report_title');
-            $table->text('report_content');
+            $table->foreignId('social_media_account_id');
+            $table->foreignId('topic_id');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('boost_reports');
+        Schema::dropIfExists('social_media_account_topics');
     }
 };

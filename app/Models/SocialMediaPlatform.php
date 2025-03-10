@@ -8,20 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class SocialMediaPlatform extends Model
 {
     use HasFactory;
-    protected $fillable = ['social_media_name', 'description'];
 
-    public function limits()
-    {
-        return $this->hasMany(SocialMediaLimit::class, 'social_media_platform_id', 'id');
-    }
+    protected $fillable = [
+        'social_media_name', 
+        'description'
+    ];
 
-    public function requestPost()
+    public function socialMediaPlatformEngagement()
     {
-        return $this->hasMany(RequestPosting::class, 'social_media_platform_id', 'id');
-    }
-    
-    public function requestBoost()
-    {
-        return $this->hasMany(RequestBoosting::class, 'social_media_platform_id', 'id');
+        return $this->hasMany(SocialMediaPlatformEngagement::class, 'social_media_platform_id', 'id')
+            ->join('social_media_engagements as sme', 'sme.id', '=', 'engagement_type_id');
     }
 }

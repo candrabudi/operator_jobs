@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\RequestBoost;
 use App\Models\RequestBoosting;
+use App\Models\RequestPost;
 use App\Models\RequestPosting;
 use App\Models\SocialMediaPlatform;
 use Illuminate\Http\Request;
@@ -12,10 +14,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $pendingPostRequests = RequestPosting::where('status', 'pending')
+        $pendingPostRequests = RequestPost::where('status', 'pending')
             ->get();
         
-        $pendingBoostRequests = RequestBoosting::where('status', 'pending')
+        $pendingBoostRequests = RequestBoost::where('status', 'pending')
             ->get();
 
         return view('dashboard.index', compact( 'pendingPostRequests', 'pendingBoostRequests'));

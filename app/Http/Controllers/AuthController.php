@@ -21,7 +21,7 @@ class AuthController extends Controller
         // Use Auth::attempt which checks the hashed password
         if (Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']], $remember)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard')->with('success', 'Logged in successfully!');
+            return redirect()->intended('/system/dashboard')->with('success', 'Logged in successfully!');
         }
     
         return back()->withErrors([

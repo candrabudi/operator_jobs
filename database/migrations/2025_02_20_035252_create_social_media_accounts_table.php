@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('boost_report_media', function (Blueprint $table) {
+        Schema::create('social_media_accounts', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('boost_report_id');
-            $table->string('file_name');
-            $table->string('file_path');
+            $table->string('account_username');
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('boost_report_media');
+        Schema::dropIfExists('social_media_accounts');
     }
 };

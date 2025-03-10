@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\SocialMediaEngagement;
 use App\Models\SocialMediaLimit;
 use App\Models\SocialMediaPlatform;
 use Illuminate\Http\Request;
@@ -15,7 +16,8 @@ class PlatformController extends Controller
         if(Auth::user()->role != "superadmin") {
             return view('error.403');
         }
-        return view('platforms.index');
+        $engagements = SocialMediaEngagement::all();
+        return view('platforms.index', compact('engagements'));
     }
 
     public function list()

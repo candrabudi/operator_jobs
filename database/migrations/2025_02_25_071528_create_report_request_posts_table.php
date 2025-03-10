@@ -4,17 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('posting_reports', function (Blueprint $table) {
+        Schema::create('report_request_posts', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('request_posting_id');
-            $table->string('report_title');
-            $table->text('report_content');
+            $table->bigInteger('request_post_id');
+            $table->text('notes');
+            $table->bigInteger('created_by');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('posting_reports');
+        Schema::dropIfExists('report_request_posts');
     }
 };

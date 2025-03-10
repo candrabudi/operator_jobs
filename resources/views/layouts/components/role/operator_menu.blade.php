@@ -1,10 +1,10 @@
 <ul id="sidebarnav">
-    <li class="nav-small-cap">
+    <li class="nav-small-cap" style="color: white;">
         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
         <span class="hide-menu">Home</span>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{{ route('system.dashboard.index') }}" aria-expanded="false">
+        <a class="sidebar-link" href="{{ route('system.dashboard.index') }}" aria-expanded="false" style="color: white;">
             <span>
                 <i class="ti ti-home"></i>
             </span>
@@ -12,20 +12,20 @@
         </a>
     </li>
    
-    <li class="nav-small-cap">
+    <li class="nav-small-cap" style="color: white;">
         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
         <span class="hide-menu">Request</span>
     </li>
-    <li class="sidebar-item">
-        <a class="sidebar-link" href="{{ route('system.operator.request.posts') }}" aria-expanded="false">
+    <li class="sidebar-item" style="color: white;">
+        <a class="sidebar-link" href="{{ route('system.operator.request.posts') }}" aria-expanded="false" style="color: white;">
             <span>
                 <i class="ti ti-send"></i>
             </span>
             <span class="hide-menu">Posting</span>
         </a>
     </li>
-    <li class="sidebar-item">
-        <a class="sidebar-link" href="{{ route('system.operator.request.boosts') }}" aria-expanded="false">
+    <li class="sidebar-item" style="color: white;">
+        <a class="sidebar-link" href="{{ route('system.operator.request.boosts') }}" aria-expanded="false" style="color: white;">
             <span>
                 <i class="ti ti-rocket"></i>
             </span>

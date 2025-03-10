@@ -43,12 +43,15 @@
                     <table class="table search-table align-middle text-nowrap">
                         <thead class="header-item">
                             <tr>
-                                <th>Trx Boost</th>
                                 <th>Link Post</th>
-                                <th>Qty</th>
+                                <th>Like Count</th>
+                                <th>Comment Count</th>
+                                <th>View Count</th>
                                 <th>Social Media</th>
-                                <th>Boost Type</th>
+                                <th>Engagement Type</th>
                                 <th>Status</th>
+                                <th>Created At</th>
+                                <th>Updated At</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -85,26 +88,74 @@
         function buildPlatformTable(data) {
             let rows = '';
             data.forEach(platform => {
+                let createdAt = new Date(platform.created_at).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                let updatedAt = new Date(platform.updated_at).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                let statusBadge;
+                switch (platform.status) {
+                    case 'pending':
+                        statusBadge = '<span class="badge bg-warning">Pending</span>';
+                        break;
+                    case 'completed':
+                        statusBadge = '<span class="badge bg-success">Completed</span>';
+                        break;
+                    default:
+                        statusBadge = '<span class="badge bg-secondary">' + platform.status + '</span>';
+                }
+
+                let actionButtons = '';
+
+                if (platform.status === 'pending') {
+                    actionButtons = `
+                        <button class="btn btn-sm btn-success d-flex align-items-center gap-1" onclick="markAsCompleted(${platform.id})">
+                            <i class="ti ti-check fs-6"></i> Completed
+                        </button>
+                    `;
+                } else {
+                    actionButtons = '-';
+                }
+
+                const shortenedLink = platform.link_post.length > 30 
+                ? platform.link_post.substring(0, 30) + '...' 
+                : platform.link_post;
                 rows += `
-            <tr class="search-items">
-                <td>${platform.trx_boost}</td>
-                <td><a href="${platform.link_post}" target="_blank">View Post</a></td>
-                <td>${platform.qty}</td>
-                <td>${platform.social_media_platform.social_media_name}</td>
-                <td>${platform.social_media_platform_limit.platform_type}</td>
-                <td>${platform.status}</td>
-                <td>
-                    <div class="action-btn d-flex gap-2">
-                        <a href="/system/request/operator/boosts/${platform.id}/report" class="btn btn-sm btn-info d-flex align-items-center gap-1">
-                            <i class="ti ti-file fs-6"></i> Report
-                        </a>
-                    </div>
-                </td>
-            </tr>
-        `;
+                    <tr class="search-items">
+                        <td><a href="${platform.link_post}" target="_blank">${shortenedLink}</a></td>
+                        <td>${platform.like_count}</td>
+                        <td>${platform.comment_count}</td>
+                        <td>${platform.view_count}</td>
+                        <td>${platform.platform.social_media_name}</td>
+                        <td>${platform.engagement.engagement_type}</td>
+                        <td>${statusBadge}</td>
+                        <td>${createdAt}</td>
+                        <td>${updatedAt}</td>
+                        <td>
+                            <div class="action-btn d-flex gap-2">
+                                ${actionButtons}
+                            </div>
+                        </td>
+                    </tr>
+                `;
             });
             return rows;
         }
+
+        function markAsCompleted(platformId) {
+            alert(`Marking platform ID ${platformId} as completed`);
+        }
+
 
         function buildPaginationLinks(paginationLinks, currentPage) {
             let paginationHtml = '';
@@ -120,20 +171,17 @@
             return paginationHtml;
         }
 
-        // Function to fetch the platforms data from the API
         function fetchPlatforms(page = 1) {
             axios.get(`/system/operator/request/boosts/list?page=${page}`)
                 .then(response => {
                     const {
-                        data, // The actual data (array)
+                        data, 
                         current_page: currentPage,
-                        links: paginationLinks // The pagination links (array)
+                        links: paginationLinks 
                     } = response.data;
 
-                    // Update the table with new data
                     platformTableBody.innerHTML = buildPlatformTable(data);
 
-                    // Update the pagination links
                     paginationNav.innerHTML = buildPaginationLinks(paginationLinks, currentPage);
                 })
                 .catch(error => {
@@ -146,7 +194,6 @@
                 });
         }
 
-        // Initial data fetch
         fetchPlatforms();
     </script>
 @endsection

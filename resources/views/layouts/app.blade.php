@@ -16,15 +16,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    
     <script>
         console.log("%cPeringatan: Jangan melakukan hal yang nakal!", "color: red; font-size: 30px; font-weight: bold;");
 
     </script>
+    @stack('styles')
 </head>
 
 <body id="bg">
@@ -52,6 +48,7 @@
         </div>
     </div>
     <div class="dark-transparent sidebartoggler"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('js/app.min.js') }}"></script>
     <script src="{{ asset('js/app.init.js') }}"></script>
@@ -63,6 +60,9 @@
     <script src="{{ asset('vendor/owl.carousel/dist/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('vendor/apexcharts/dist/apexcharts.min.js') }}"></script>
     {{-- <script src="{{ asset('js/dashboards/dashboard.js') }}"></script> --}}
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+
     @stack('scripts')
 </body>
 

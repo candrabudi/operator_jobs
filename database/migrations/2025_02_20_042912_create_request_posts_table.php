@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('request_postings', function (Blueprint $table) {
+        Schema::create('request_posts', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
             $table->bigInteger('social_media_platform_id');
-            $table->string('trx_post');
+            $table->bigInteger('topic_id');
             $table->string('title');
-            $table->string('notes');
+            $table->string('notes')->nullable();
             $table->text('content');
-            $table->integer('total_account');
             $table->enum('status', ['pending', 'process', 'completed'])->default('pending');
+            $table->foreignId('created_by');
+            $table->bigInteger('updated_by')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('request_postings');
+        Schema::dropIfExists('request_posts');
     }
 };

@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posting_report_media', function (Blueprint $table) {
+        Schema::create('social_media_account_platform_assigns', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('posting_report_id');
-            $table->string('file_name');
-            $table->string('file_path');
+            $table->bigInteger('social_media_account_id');
+            $table->bigInteger('social_media_platform_id');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posting_report_media');
+        Schema::dropIfExists('social_media_account_platform_assigns');
     }
 };

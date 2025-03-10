@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\RequestBoosting;
+use App\Models\RequestBoost;
+use App\Models\SocialMediaEngagement;
 use App\Models\SocialMediaPlatform;
 use App\Models\SocialMediaLimit;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,7 +24,7 @@ class RequestBoostingController extends Controller
 
     public function list()
     {
-        $requestBoosts = RequestBoosting::with('socialMediaPlatform', 'socialMediaPlatformLimit')
+        $requestBoosts = RequestBoost::with('platform')
             ->paginate(25);
 
         return response()->json($requestBoosts);
@@ -30,7 +33,7 @@ class RequestBoostingController extends Controller
     public function create()
     {
         $socialMedias = SocialMediaPlatform::all();
-        $boostLimits = SocialMediaLimit::all();
+        $boostLimits = SocialMediaEngagement::all();
 
         $operators = User::whereNotIn('role', ['superadmin', 'admin'])
             ->get();
@@ -52,11 +55,10 @@ class RequestBoostingController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $requestBoost = new RequestBoosting();
-        $requestBoost->user_id = $request->user_id;
+        $requestBoost = new RequestBoost();
+        $requestBoost->created_by = Auth::user()->id;
         $requestBoost->social_media_platform_id = $request->social_media_platform_id;
-        $requestBoost->social_media_platform_limit_id = $request->social_media_platform_limit_id;
-        $requestBoost->trx_boost = strtoupper(uniqid('trx_'));
+        $requestBoost->social_media_engagement_id = $request->engagement_id;
         $requestBoost->link_post = $request->link_post;
         $requestBoost->notes = $request->content ?? '-';
         $requestBoost->comment = $request->comment;
@@ -71,20 +73,24 @@ class RequestBoostingController extends Controller
         $socialMediaPlatform = SocialMediaPlatform::where('id', $request->social_media_platform_id)
             ->first();
 
-        $socialMediaPlatformLimit = SocialMediaLimit::where('id', $request->social_media_platform_limit_id)
+        $engagement = SocialMediaEngagement::where('id', $request->engagement_id)
             ->first();
 
         $status = strtoupper($requestBoost->status);
 
-        $message = "
-            NOMOR TRX: *{$requestBoost->trx_boost}* \nOPERATOR: *{$operator->full_name}* \nTIPE REQUEST: *BOOSTING* \nTOTAL BOOSTING: *{$request->qty}* \nSOCIAL MEDIA: *{$socialMediaPlatform->social_media_name}* \nBOOSTING TYPE: *{$socialMediaPlatformLimit->platform_type}* \nLINK POST: {$request->link_post} \nTANGGAL REQUEST: *{$dateRequest}* \nSTATUS: *{$status}* \n\n*MOHON BANTUANNYA UNTUK MELAKUKAN BOOSTING MENGENAI REQUEST DARI PUSAT*";
+        $operators = User::where('role', 'operator_boosting')
+            ->get();
 
-        Http::get('https://whatsapp.xn--v3cud6b6c.systems/send-message', [
-            'api_key' => 'YelYqpUlZjESa077DpL3PP2kjyIBL1',
-            'sender' => '6285229931237',
-            'number' => $operator->phone_number,
-            'message' => $message,
-        ]);
+        foreach($operators as $op) {
+            $message = "NOMOR TRX: *{$requestBoost->trx_boost}* \nOPERATOR: *{$operator->full_name}* \nTIPE REQUEST: *BOOSTING*\nSOCIAL MEDIA: *{$socialMediaPlatform->social_media_name}* \nBOOSTING TYPE: *{$engagement->engagement_type}* \nLINK POST: {$request->link_post} \nTANGGAL REQUEST: *{$dateRequest}* \nSTATUS: *{$status}* \n\n*MOHON BANTUANNYA UNTUK MELAKUKAN BOOSTING MENGENAI REQUEST DARI PUSAT*";
+    
+            Http::get('https://whatsapp.xn--v3cud6b6c.systems/send-message', [
+                'api_key' => 'YelYqpUlZjESa077DpL3PP2kjyIBL1',
+                'sender' => '6285229931237',
+                'number' => $op->phone_number,
+                'message' => $message,
+            ]);
+        }
 
         return redirect()->route('system.request.boosts.index');
     }
@@ -141,4 +147,16 @@ class RequestBoostingController extends Controller
 
         return response()->json($boostLimits);
     }
+
+    public function getEngagements($platformId)
+    {
+        $engagements = DB::table('social_media_platform_engagements')
+            ->join('social_media_engagements', 'social_media_platform_engagements.engagement_type_id', '=', 'social_media_engagements.id')
+            ->where('social_media_platform_engagements.social_media_platform_id', $platformId)
+            ->select('social_media_engagements.id', 'social_media_engagements.engagement_type', 'min', 'max')
+            ->get();
+
+        return response()->json(['engagements' => $engagements]);
+    }
+
 }
