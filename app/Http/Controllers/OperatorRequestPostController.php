@@ -83,6 +83,6 @@ class OperatorRequestPostController extends Controller
                 'message' => $message,
             ]);
         }
-        return redirect()->route('system.operator.request.posts.list');
+        return redirect()->route('system.operator.request.posts.index');
     }
 }

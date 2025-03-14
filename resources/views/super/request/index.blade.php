@@ -10,7 +10,8 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a class="text-muted text-decoration-none" href="{{ route('system.dashboard.index') }}">Dashboard</a>
+                                    <a class="text-muted text-decoration-none"
+                                        href="{{ route('system.dashboard.index') }}">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item" aria-current="page">Request Post</li>
                             </ol>
@@ -37,7 +38,8 @@
                     </div>
                     <div
                         class="col-md-8 col-xl-9 text-end d-flex justify-content-md-end justify-content-center mt-3 mt-md-0">
-                        <a href="{{ route('system.request.posts.create') }}" class="btn btn-sm btn-info d-flex align-items-center">
+                        <a href="{{ route('system.request.posts.create') }}"
+                            class="btn btn-sm btn-info d-flex align-items-center">
                             Add Request Post
                         </a>
                     </div>
@@ -48,12 +50,11 @@
                     <table class="table search-table align-middle text-nowrap">
                         <thead class="header-item">
                             <tr>
-                                <th>Trx Post</th>
                                 <th>Title</th>
-                                <th>Total Media</th>
                                 <th>Social Media</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th>Tanggal DiBuat</th>
+                                <th>Tanggal DiUpdate</th>
                             </tr>
                         </thead>
                         <tbody id="request-table-body">
@@ -81,27 +82,25 @@
 
         function buildPlatformTable(data) {
             let rows = '';
-            data.forEach(platform => {
-                const mediaCount = platform.request_media_posts.length;
-                const mediaType = platform.request_media_posts.map(media => media.file_type).join(', ');
 
+            data.forEach(platform => {
+                const createdAt = new Date(platform.created_at).toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                const updatedAt = new Date(platform.updated_at).toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
                 rows += `
                     <tr class="search-items">
-                        <td>${platform.trx_post}</td>
                         <td>${platform.title}</td>
-                        <td>${mediaCount} (${mediaType})</td>
                         <td>${platform.platform.social_media_name}</td>
                         <td>${platform.status}</td>
-                        <td>
-                            <div class="action-btn">
-                                <a href="/system/request/posts/${platform.id}/edit" class="text-info edit" onclick="editPlatform(${platform.id})">
-                                    <i class="ti ti-pencil fs-5"></i> Edit
-                                </a>
-                                <a href="javascript:void(0)" class="text-dark delete ms-2" onclick="deletePlatform(${platform.id})">
-                                    <i class="ti ti-trash fs-5"></i> Delete
-                                </a>
-                            </div>
-                        </td>
+                        <td>${createdAt}</td>
+                        <td>${updatedAt}</td>
                     </tr>
                 `;
             });

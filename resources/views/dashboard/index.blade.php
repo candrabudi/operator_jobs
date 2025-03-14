@@ -53,33 +53,25 @@
                                             <th>Title</th>
                                             <th>Platform</th>
                                             <th>Content</th>
-                                            <th>Total Accounts</th>
                                             <th>Status</th>
                                             <th>Date</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="text-dark">
                                         @foreach ($pendingPostRequests as $requestPost)
                                             <tr>
                                                 <td class="ps-0 text-truncate">
-                                                    <span class="fw-semibold">{{ $requestPost->user->full_name }}</span>
+                                                    <span class="fw-semibold">{{ $requestPost->updatedBy ? $requestPost->updatedBy->full_name : 'Belum Tindak Lanjut' }}</span>
                                                 </td>
                                                 <td>
                                                     <span class="fw-semibold">{{ $requestPost->title }}</span>
                                                 </td>
                                                 <td>{{ $requestPost->platform->social_media_name }}</td>
-                                                <td>{!! Str::limit($requestPost->notes, 25) !!}</td>
-                                                <td>{{ $requestPost->total_account }}</td>
+                                                <td>{!! Str::limit($requestPost->content, 25) !!}</td>
                                                 <td>
                                                     <span class="badge bg-warning-subtle text-warning">Pending</span>
                                                 </td>
                                                 <td>{{ $requestPost->created_at->format('d M, Y H:i') }}</td>
-                                                <td>
-                                                    <a href="" class="btn btn-primary btn-sm">
-                                                        Follow Up
-                                                    </a>
-                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -103,32 +95,24 @@
                                             <th class="ps-0">Operator</th>
                                             <th>Social Media</th>
                                             <th>Platform Type</th>
-                                            <th>Quantity</th>
                                             <th>Status</th>
                                             <th>Date</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="text-dark">
                                         @foreach ($pendingBoostRequests as $boostRequest)
                                             <tr>
                                                 <td class="ps-0 text-truncate">
-                                                    <span class="fw-semibold">{{ $boostRequest->user->full_name }}</span>
+                                                    <span class="fw-semibold">{{ $boostRequest->updatedBy ? $boostRequest->updatedBy->full_name : 'Belum Tindak Lanjut' }}</span>
                                                 </td>
                                                 <td>
-                                                    <span class="fw-semibold">{{ $boostRequest->socialMediaPlatform->social_media_name }}</span>
+                                                    <span class="fw-semibold">{{ $boostRequest->platform->social_media_name }}</span>
                                                 </td>
-                                                <td>{{ strtoupper($boostRequest->socialMediaPlatformLimit->platform_type) }}</td>
-                                                <td>{{ $boostRequest->qty }}</td>
+                                                <td>{{ strtoupper($boostRequest->engagement->engagement_type) }}</td>
                                                 <td>
                                                     <span class="badge bg-warning-subtle text-warning">Pending</span>
                                                 </td>
                                                 <td>{{ $boostRequest->created_at->format('d M, Y H:i') }}</td>
-                                                <td>
-                                                    <a href="" class="btn btn-primary btn-sm">
-                                                        Follow Up
-                                                    </a>
-                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>

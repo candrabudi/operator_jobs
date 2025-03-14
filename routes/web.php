@@ -102,11 +102,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/system/operator/request/boosts', [OperatorRequestBoostController::class, 'index'])->name('system.operator.request.boosts');
     Route::get('/system/operator/request/boosts/list', [OperatorRequestBoostController::class, 'list'])->name('system.operator.request.boosts.list');
-    Route::get('/system/request/operator/boosts/{a}/detail', [OperatorRequestBoostController::class, 'detail'])->name('system.operator.request.boosts.detail');
-    Route::get('/system/request/operator/boosts/{a}/detail', [OperatorRequestBoostController::class, 'detail'])->name('system.operator.request.boosts.detail');
-    Route::get('/system/request/operator/boosts/{a}/report', [OperatorRequestBoostController::class, 'report'])->name('system.operator.request.boosts.report');
-    Route::post('/system/request/operator/boosts/report/store', [OperatorRequestBoostController::class, 'storeReport'])->name('system.operator.request.boosts.store');
-    Route::put('/system/request/operator/boosts/report/update/{id}', [OperatorRequestBoostController::class, 'updateReport'])->name('system.operator.request.boosts.update');
+    Route::post('/system/request/operator/boosts/update-completed/{id}', [OperatorRequestBoostController::class, 'updateToCompleted'])->name('system.operator.request.boosts.updateToCompleted');
 
 
     Route::get('/system/topics', [TopicController::class, 'index'])->name('system.topics.index');

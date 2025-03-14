@@ -127,9 +127,9 @@
                     actionButtons = '-';
                 }
 
-                const shortenedLink = platform.link_post.length > 30 
-                ? platform.link_post.substring(0, 30) + '...' 
-                : platform.link_post;
+                const shortenedLink = platform.link_post.length > 30 ?
+                    platform.link_post.substring(0, 30) + '...' :
+                    platform.link_post;
                 rows += `
                     <tr class="search-items">
                         <td><a href="${platform.link_post}" target="_blank">${shortenedLink}</a></td>
@@ -153,8 +153,36 @@
         }
 
         function markAsCompleted(platformId) {
-            alert(`Marking platform ID ${platformId} as completed`);
+            axios.post(`/system/request/operator/boosts/update-completed/${platformId}`)
+                .then(function(response) {
+                    if (response.data.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response.data.message,
+                            confirmButtonText: 'OK'
+                        });
+                        fetchPlatforms();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.data.message,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(function(error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while updating the status.',
+                        confirmButtonText: 'OK'
+                    });
+                    console.error('Error:', error);
+                });
         }
+
 
 
         function buildPaginationLinks(paginationLinks, currentPage) {
@@ -175,9 +203,9 @@
             axios.get(`/system/operator/request/boosts/list?page=${page}`)
                 .then(response => {
                     const {
-                        data, 
+                        data,
                         current_page: currentPage,
-                        links: paginationLinks 
+                        links: paginationLinks
                     } = response.data;
 
                     platformTableBody.innerHTML = buildPlatformTable(data);

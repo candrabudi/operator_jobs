@@ -18,4 +18,9 @@ class RequestPost extends Model
     {
         return $this->hasMany(RequestPostMedia::class, 'request_posting_id', 'id');
     }
+
+    public function updatedBy()
+    {
+        return $this->hasOne(User::class, 'id', 'updated_by');
+    }
 }

@@ -27,7 +27,8 @@ class RequestPostingController extends Controller
 
     public function list()
     {
-        $requestPosts = RequestPost::paginate(25);
+        $requestPosts = RequestPost::with('media', 'platform', 'updatedBy')
+        ->paginate(25);
 
         return response()->json($requestPosts);
     }
